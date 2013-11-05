@@ -26,12 +26,6 @@ namespace Tapestry.views
             hasStarted = false;
         }
 
-        private void tapCanvas_Tap(object sender, GestureEventArgs e)
-        {
-            if(hasStarted)
-            txtCount.Text = (int.Parse(txtCount.Text) + 1).ToString();
-        }
-
         private void startGame(int timeout)
         {
             stckStart.Visibility = (hasStarted) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
@@ -39,13 +33,13 @@ namespace Tapestry.views
             //start timer
 
             DispatcherTimer timer = new DispatcherTimer();
-            int counter = getTimeout(); 
+            int counter = getTimeout();
 
             //txtTimer.Text = counter.ToString();
 
             timer.Tick += delegate(object s, EventArgs args)
             {
-                counter--;                
+                counter--;
                 txtTimer.Text = counter.ToString();
                 if (counter == 0)
                 {
@@ -53,7 +47,7 @@ namespace Tapestry.views
                     stopGame(txtCount.Text);
                 }
             };
-            
+
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
 
@@ -61,7 +55,7 @@ namespace Tapestry.views
         }
         private void stopGame(string count)
         {
-            MessageBox.Show("Your score is: " + count );
+            MessageBox.Show("Your score is: " + count);
             hasStarted = false;
         }
 
@@ -81,6 +75,12 @@ namespace Tapestry.views
             base.OnNavigatedTo(e);
             int time = getTimeout();
             txtTimer.Text = (time != TIME_UNLIMITED) ? time.ToString() : "tapathon";
+        }
+
+        private void mouseEvtExit(object sender, MouseEventArgs e)
+        {
+            if (hasStarted)
+                txtCount.Text = (int.Parse(txtCount.Text) + e.StylusDevice.GetStylusPoints((UIElement)sender).Count).ToString();
         }
     }
 }

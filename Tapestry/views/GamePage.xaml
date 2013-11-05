@@ -15,15 +15,15 @@
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent" Margin="5,5,5,5">
-        <Canvas Tap="tapCanvas_Tap" Name="tapCanvas">
+        <Canvas MouseLeave="mouseEvtExit" Name="tapCanvas">
             <Rectangle Width="450" Height="750" Fill="White" />
         </Canvas>
-        <TextBlock Name="txtTimer" Tap="tapCanvas_Tap"  Margin="20" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" Text="00" FontSize="{StaticResource PhoneFontSizeExtraLarge}" />
+        <TextBlock Name="txtTimer" MouseLeave="mouseEvtExit" Margin="20" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" Text="00" FontSize="{StaticResource PhoneFontSizeExtraLarge}" />
         <StackPanel Tap="stckStart_Tap" Name="stckStart" HorizontalAlignment="Stretch" VerticalAlignment="Center"  Visibility="Visible">
             <TextBlock Text="Tap" Foreground="Black" TextAlignment="Center"  FontSize="{StaticResource PhoneFontSizeExtraExtraLarge}"/>
             <TextBlock Text="To" Foreground="Black" TextAlignment="Center"  FontSize="{StaticResource PhoneFontSizeExtraExtraLarge}"/>
             <TextBlock Text="Start" Foreground="Black"  TextAlignment="Center" FontSize="{StaticResource PhoneFontSizeExtraExtraLarge}" />
         </StackPanel>
-        <TextBlock Tap="tapCanvas_Tap" Name="txtCount" Text="1" Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeHuge}" Visibility="Collapsed" />
+        <TextBlock Tap="tapCanvas_Tap" MouseEnter="mouseEvtEnter" MouseLeave="mouseEvtExit" MouseMove="mouseEvtMove" Name="txtCount" Text="1" Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeHuge}" Visibility="Collapsed" />
     </Grid>
 </phone:PhoneApplicationPage>
