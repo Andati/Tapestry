@@ -17,25 +17,39 @@
     <!--LayoutRoot contains the root grid where all other page content is placed-->
     <Grid x:Name="LayoutRoot">
         <controls:Panorama Title="tapestry">
-
             <!--Panorama item one-->
             <controls:PanoramaItem Header="challenges">
-                <ListBox Name="lstCategory" SelectionChanged="lstCategory_SelectionChanged">
-                    <ListBoxItem Content="60 seconds"></ListBoxItem>
-                    <ListBoxItem Content="30 seconds"></ListBoxItem>
-                    <ListBoxItem Content="10 seconds"></ListBoxItem>
-                    <ListBoxItem Content="5 seconds"></ListBoxItem>
+                <ListBox Name="lstCategory" SelectionChanged="lstCategory_SelectionChanged" ItemsSource="{Binding}" DataContext="{Binding}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel  Margin="30,5,0,0" Orientation="Horizontal">
+                                <Image Source="{Binding Path=image}" />
+                                <TextBlock Margin="15,0,10,0" FontSize="{StaticResource PhoneFontSizeExtraLarge}" Text="{Binding Path=str}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
                     <ListBoxItem Content="tapathon"></ListBoxItem>
                 </ListBox>
             </controls:PanoramaItem>
 
             <!--Panorama item two-->
             <controls:PanoramaItem Header="stats">
-                <Grid ><ListBox>
-                    <ListBoxItem Content="My stats"></ListBoxItem>
-                    <ListBoxItem Content="World stats"></ListBoxItem>
-                </ListBox>
-                    <TextBlock Text="500 people are tapping it" VerticalAlignment="Bottom"></TextBlock>
+                <Grid >
+                    <ListBox>
+                        <ListBoxItem>
+                            <StackPanel Margin="30,10,0,0" Orientation="Horizontal">
+                                <Image Source="/images/worldstats.png" />
+                                <TextBlock Margin="15,0,10,0" FontSize="{StaticResource PhoneFontSizeExtraLarge}" Text="My stats"/>
+                            </StackPanel>
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <StackPanel Margin="30,10,0,0" Orientation="Horizontal">
+                                <Image Source="/images/mystats.png" />
+                                <TextBlock Margin="15,0,10,0" FontSize="{StaticResource PhoneFontSizeExtraLarge}" Text="World stats"/>
+                            </StackPanel>
+                        </ListBoxItem>
+                    </ListBox>
+                    <TextBlock Text="500 people are tapping it" TextAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
                 </Grid>
             </controls:PanoramaItem>
         </controls:Panorama>
@@ -44,3 +58,4 @@
     <!--Panorama-based applications should not show an ApplicationBar-->
 
 </phone:PhoneApplicationPage>
+    

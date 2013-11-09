@@ -17,18 +17,8 @@ namespace Tapestry.app
         public Color _color;
         public Point _position;
 
-        public long timestamp
-        {
-            get
-            {
-                return _timestamp;
-            }
-            set
-            {
-                _timestamp = value;
-            }
-        }
-        //TODO save as hex
+        public long timestamp { get { return _timestamp; } set { _timestamp = value; } }
+        //TODO save as hex or bytes
         public Color color { get { return _color; } set { _color = value; } }
         public Point position { get { return _position; } set { _position = value; } }
     }
