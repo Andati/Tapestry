@@ -70,10 +70,15 @@ namespace Tapestry.views
 
         private void stopGame(string count)
         {
-            int time = (isTimed) ? getTimeout() : (int)(DateTime.Now - startTime).TotalSeconds;
-            MessageBox.Show(String.Format("You have tapped {0} times within {1} {2}", count, time, StringVals.TIME_UNIT));
+            showScores(count);
             gameState = GAME_STATE.STOPPED;
             timer = null;
+        }
+
+        private void showScores(string count)
+        {
+            int time = (isTimed) ? getTimeout() : (int)(DateTime.Now - startTime).TotalSeconds;
+            MessageBox.Show(String.Format("You have tapped {0} times within {1} {2}", count, time, StringVals.TIME_UNIT));
         }
 
         private void stckStart_Tap(object sender, GestureEventArgs e)
@@ -140,6 +145,19 @@ namespace Tapestry.views
             tap.SetValue(Canvas.TopProperty, p.Y - tap.Height / 2);
             tap.IsHitTestVisible = false;
             tapCanvas.Children.Add(tap);
+        }
+
+        protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
+        {
+            if (isTimed)
+            {
+                MessageBox.Show("Bailed out too soon!");
+            }
+            else
+            {
+                showScores(txtCount.Text);
+            }
+            base.OnBackKeyPress(e);            
         }
     }
 }

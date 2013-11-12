@@ -19,10 +19,10 @@
         <controls:Panorama Title="tapestry">
             <!--Panorama item one-->
             <controls:PanoramaItem Header="challenges">
-                <ListBox Name="lstCategory" SelectionChanged="lstCategory_SelectionChanged" ItemsSource="{Binding}" DataContext="{Binding}">
+                <ListBox Name="lstCategory" ItemsSource="{Binding}" DataContext="{Binding}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel  Margin="30,5,0,0" Orientation="Horizontal">
+                            <StackPanel Tap="listItemTapped"  Margin="30,5,0,0" Orientation="Horizontal">
                                 <Image Source="{Binding Path=image}" />
                                 <TextBlock Margin="15,0,10,0" FontSize="{StaticResource PhoneFontSizeExtraLarge}" Text="{Binding Path=str}"/>
                             </StackPanel>

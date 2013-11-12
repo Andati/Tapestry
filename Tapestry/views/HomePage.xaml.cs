@@ -20,12 +20,13 @@ namespace Tapestry.views
             lstCategory.DataContext = challenges;
         }
 
-        private void lstCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void listItemTapped(object sender, EventArgs e)
         {
-            ListBox l = (ListBox)sender;
-            Challenge c = (Challenge)l.SelectedItem;
+             //ListBox l = (ListBox)sender;
+            Challenge c = (Challenge)lstCategory.SelectedItem;
             String gameTime = views.GamePage.EXTRA_TIME + "=" + c.time.ToString();
             NavigationService.Navigate(new Uri("/views/GamePage.xaml?" + gameTime, UriKind.RelativeOrAbsolute));
         }
+                
     }
 }
