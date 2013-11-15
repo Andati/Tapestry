@@ -12,12 +12,15 @@ using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using System.Windows.Threading;
 using Tapestry.app;
+using System.Threading;
+using System.Windows.Media.Imaging;
 
 namespace Tapestry.views
 {
     public partial class GamePage : PhoneApplicationPage
     {
         public static readonly string EXTRA_TIME = "time";
+
         private enum GAME_STATE
         {
             STARTING, //game has not yet started running
@@ -55,7 +58,7 @@ namespace Tapestry.views
                     if (counter == 0)
                     {
                         timer.Stop();
-                        stopGame(txtCount.Text);
+                        stopGame();
                     }
                 };
                 timer.Interval = new TimeSpan(0, 0, 1);
@@ -68,17 +71,62 @@ namespace Tapestry.views
             gameState = GAME_STATE.RUNNING;
         }
 
-        private void stopGame(string count)
+        private void stopGame()
         {
-            showScores(count);
             gameState = GAME_STATE.STOPPED;
+            if (timer != null) timer.Stop();
             timer = null;
+            showScores(txtCount.Text);
         }
 
         private void showScores(string count)
         {
             int time = (isTimed) ? getTimeout() : (int)(DateTime.Now - startTime).TotalSeconds;
-            MessageBox.Show(String.Format("You have tapped {0} times within {1} {2}", count, time, StringVals.TIME_UNIT));
+
+            using (GameScoreDataContext db = new GameScoreDataContext(GamesScore.strConnectionString))
+            {
+                GamesScore newScore = new GamesScore
+                {
+                    Score = int.Parse(count),
+                    Time = time,
+                    isTimed = isTimed
+                };
+
+                db.GameScores.InsertOnSubmit(newScore);
+                db.SubmitChanges();
+            }
+            StackPanel sp = new StackPanel();
+            sp.Children.Add(new Border { Height = 30 });
+            sp.Children.Add(new TextBlock { Text = String.Format("You have tapped {0} times within {1} {2}", txtCount.Text, time, StringVals.TIME_UNIT), FontSize = 40, TextWrapping= TextWrapping.Wrap });
+            sp.Children.Add(new Border { Height = 30 });
+            ListBox lb = new ListBox();
+           
+            TextAlignment align = TextAlignment.Center;
+            int size = 50;
+            Image imgRestart = new Image { Source = new BitmapImage(new Uri("/images/restart.png", UriKind.RelativeOrAbsolute)) };
+            TextBlock
+                txtRestart = new TextBlock { Text = "Restart", TextAlignment = align, FontSize = size },
+                txtBailOut = new TextBlock { Text = "Bail Out", TextAlignment = align, FontSize = size };
+
+            //bailed out too soon
+            lb.Items.Add(txtRestart);
+            lb.Items.Add(txtBailOut);
+            sp.Children.Add(lb);
+            Coding4Fun.Toolkit.Controls.AboutPrompt abt = new Coding4Fun.Toolkit.Controls.AboutPrompt { Body = sp, ActionPopUpButtons = new List<Button>(), VersionNumber = null }; abt.Show();
+            abt.Height = 450;
+
+            txtRestart.Tap += (obj, args) => { restartGame(); abt.Hide(); };
+            txtBailOut.Tap += (obj, args) => { stopGame(); NavigationService.GoBack(); };
+        }
+
+        private void restartGame()
+        {
+            txtCount.Text = "1";
+            gameState = GAME_STATE.STARTING;
+            stckStart.Visibility = System.Windows.Visibility.Visible;
+            txtCount.Visibility = System.Windows.Visibility.Collapsed ;
+            txtTimer.Text = getTimeout().ToString();
+            tapCanvas.Children.Clear(); tapCanvas.Children.Add(rct);
         }
 
         private void stckStart_Tap(object sender, GestureEventArgs e)
@@ -146,18 +194,29 @@ namespace Tapestry.views
             tap.IsHitTestVisible = false;
             tapCanvas.Children.Add(tap);
         }
-
+        private void showPrompt()
+        {
+            Dispatcher.BeginInvoke(() =>
+            {
+                //new Coding4Fun.Toolkit.Controls.AboutPrompt { Body = String.Format("You have tapped {0} times within {1} {2}", 12, 15, StringVals.TIME_UNIT) }.Show();
+                //showScores(txtCount.Text);
+                stopGame();
+            });
+        }
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
         {
-            if (isTimed)
+            if (gameState != GAME_STATE.RUNNING)
             {
-                MessageBox.Show("Bailed out too soon!");
+                base.OnBackKeyPress(e); return;
             }
-            else
-            {
-                showScores(txtCount.Text);
-            }
-            base.OnBackKeyPress(e);            
+            gameState = GAME_STATE.STOPPED;
+            if (timer != null) timer.Stop();
+            timer = null;
+
+            new Thread(showPrompt).Start();
+            e.Cancel = true;
+
+            base.OnBackKeyPress(e);
         }
     }
 }

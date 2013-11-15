@@ -12,6 +12,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Tapestry.app;
 
 namespace Tapestry
 {
@@ -63,6 +64,13 @@ namespace Tapestry
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
+            using (GameScoreDataContext db = new GameScoreDataContext( GamesScore.strConnectionString))
+            {
+                if (!db.DatabaseExists())
+                {
+                    db.CreateDatabase();
+                }
+            }
         }
 
         // Code to execute when the application is activated (brought to foreground)

@@ -34,9 +34,9 @@
 
             <!--Panorama item two-->
             <controls:PanoramaItem Header="stats">
-                <Grid >
+                <Grid>
                     <ListBox>
-                        <ListBoxItem>
+                        <ListBoxItem Tap="ShowMyStatics" >
                             <StackPanel Margin="30,10,0,0" Orientation="Horizontal">
                                 <Image Source="/images/worldstats.png" />
                                 <TextBlock Margin="15,0,10,0" FontSize="{StaticResource PhoneFontSizeExtraLarge}" Text="My stats"/>
@@ -44,14 +44,25 @@
                         </ListBoxItem>
                         <ListBoxItem>
                             <StackPanel Margin="30,10,0,0" Orientation="Horizontal">
-                                <Image Source="/images/mystats.png" />
-                                <TextBlock Margin="15,0,10,0" FontSize="{StaticResource PhoneFontSizeExtraLarge}" Text="World stats"/>
+                                <Image Source="/images/mystats.png" VerticalAlignment="Top" />
+                                <TextBlock 
+                                    Margin="15,0,10,0" 
+                                    Width="300"
+                                    FontSize="{StaticResource PhoneFontSizeExtraLarge}" 
+                                    Text="World stats (coming soon)" 
+                                    TextWrapping="Wrap" />
                             </StackPanel>
                         </ListBoxItem>
                     </ListBox>
                     <TextBlock Text="500 people are tapping it" TextAlignment="Center" VerticalAlignment="Bottom"></TextBlock>
                 </Grid>
             </controls:PanoramaItem>
+            
+            <!-- item three -->
+            <controls:PanoramaItem Header="about">
+                <Grid><TextBlock Name="txtAbout" Text="look in text file" FontSize="30" /></Grid>
+            </controls:PanoramaItem>
+            
         </controls:Panorama>
     </Grid>
 

@@ -16,7 +16,7 @@
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent" Margin="5,5,5,5">
         <Canvas MouseEnter="mouseEvt" Name="tapCanvas">
-            <Rectangle Width="450" Height="750" Fill="White" />
+            <Rectangle Name="rct" Width="450" Height="750" Fill="White" />
         </Canvas>
         <TextBlock IsHitTestVisible="False" Name="txtTimer" Margin="20" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Black" Text="00" FontSize="{StaticResource PhoneFontSizeExtraLarge}" />
         <StackPanel Tap="stckStart_Tap" Name="stckStart" HorizontalAlignment="Stretch" VerticalAlignment="Center"  Visibility="Visible">
