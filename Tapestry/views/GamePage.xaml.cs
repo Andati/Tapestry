@@ -25,14 +25,13 @@ namespace Tapestry.views
         {
             STARTING, //game has not yet started running
             RUNNING, //game is running
-            PAUSED, //game was running then paused
             STOPPED //game was running then stopped
         };
         private GAME_STATE gameState;
         private bool isTimed;
         private DateTime startTime;
         private DispatcherTimer timer;
-        
+
         //TODO Change game from timed to tap regions
         //TODO Tapathon should have whole screen as tap region
 
@@ -58,6 +57,7 @@ namespace Tapestry.views
                 {
                     counter--;
                     txtTimer.Text = counter.ToString();
+                    ((SolidColorBrush)txtTimer.Foreground).Color = ((counter / (double)getTimeout()) < 0.3) ? Colors.Red : Colors.Black;
                     if (counter == 0)
                     {
                         timer.Stop();
@@ -65,6 +65,7 @@ namespace Tapestry.views
                     }
                 };
                 timer.Interval = new TimeSpan(0, 0, 1);
+                isTimed = true;
                 timer.Start();
             }
             else
@@ -80,6 +81,22 @@ namespace Tapestry.views
             if (timer != null) timer.Stop();
             timer = null;
             showScores(txtCount.Text);
+        }
+
+        private void restartGame()
+        {
+            if (timer.IsEnabled) timer.Stop();
+            if (timer != null) timer = null;
+            gameState = GAME_STATE.STARTING;
+            stckStart.Visibility = System.Windows.Visibility.Visible;
+            txtCount.Visibility = System.Windows.Visibility.Collapsed;
+            txtCount.Text = "1";
+            txtTimer.Text = getTimeout().ToString();
+            txtTimer.Visibility = System.Windows.Visibility.Collapsed;
+            ((SolidColorBrush)txtTimer.Foreground).Color = Colors.Black;
+
+            tapCanvas.Children.Clear();
+            tapCanvas.Children.Add(rct);
         }
 
         private void showScores(string count)
@@ -100,10 +117,10 @@ namespace Tapestry.views
             }
             StackPanel sp = new StackPanel();
             sp.Children.Add(new Border { Height = 30 });
-            sp.Children.Add(new TextBlock { Text = String.Format("You have tapped {0} times within {1} {2}", txtCount.Text, time, StringVals.TIME_UNIT), FontSize = 40, TextWrapping= TextWrapping.Wrap });
+            sp.Children.Add(new TextBlock { Text = String.Format("You have tapped {0} times within {1} {2}", txtCount.Text, time, StringVals.TIME_UNIT), FontSize = 40, TextWrapping = TextWrapping.Wrap });
             sp.Children.Add(new Border { Height = 30 });
             ListBox lb = new ListBox();
-           
+
             TextAlignment align = TextAlignment.Center;
             int size = 50;
             Image imgRestart = new Image { Source = new BitmapImage(new Uri("/images/restart.png", UriKind.RelativeOrAbsolute)) };
@@ -111,7 +128,6 @@ namespace Tapestry.views
                 txtRestart = new TextBlock { Text = "Restart", TextAlignment = align, FontSize = size },
                 txtBailOut = new TextBlock { Text = "Bail Out", TextAlignment = align, FontSize = size };
 
-            //bailed out too soon
             lb.Items.Add(txtRestart);
             lb.Items.Add(txtBailOut);
             sp.Children.Add(lb);
@@ -120,16 +136,6 @@ namespace Tapestry.views
 
             txtRestart.Tap += (obj, args) => { restartGame(); abt.Hide(); };
             txtBailOut.Tap += (obj, args) => { stopGame(); NavigationService.GoBack(); };
-        }
-
-        private void restartGame()
-        {
-            txtCount.Text = "1";
-            gameState = GAME_STATE.STARTING;
-            stckStart.Visibility = System.Windows.Visibility.Visible;
-            txtCount.Visibility = System.Windows.Visibility.Collapsed ;
-            txtTimer.Text = getTimeout().ToString();
-            tapCanvas.Children.Clear(); tapCanvas.Children.Add(rct);
         }
 
         private void stckStart_Tap(object sender, GestureEventArgs e)
@@ -153,6 +159,7 @@ namespace Tapestry.views
             int time = int.Parse(timeStr);
             return time;
         }
+
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -166,6 +173,7 @@ namespace Tapestry.views
             //TODO save game state, pause game e.t.c
             if (timer != null) timer.Stop();
         }
+
         private void mouseEvt(object sender, MouseEventArgs e)
         {
             if (gameState == GAME_STATE.STARTING)//start game if not yet started
@@ -197,6 +205,7 @@ namespace Tapestry.views
             tap.IsHitTestVisible = false;
             tapCanvas.Children.Add(tap);
         }
+
         private void showPrompt()
         {
             Dispatcher.BeginInvoke(() =>
@@ -206,6 +215,7 @@ namespace Tapestry.views
                 stopGame();
             });
         }
+
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
         {
             if (gameState != GAME_STATE.RUNNING)
