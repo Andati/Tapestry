@@ -2,6 +2,10 @@
 using System.Windows.Controls;
 using Microsoft.Phone.Controls;
 using Tapestry.app;
+using System.Windows;
+using System.Windows.Resources;
+using System.IO;
+using System.Threading;
 
 namespace Tapestry.views
 {
@@ -17,6 +21,39 @@ namespace Tapestry.views
         {
             InitializeComponent();
             lstCategory.DataContext = challenges;
+
+            //TODO Execute in another thread
+            loadAbout();
+        }
+
+        private void loadAbout()
+        {
+            StreamResourceInfo resourceStream = null;
+            string val = string.Empty;
+            try
+            {
+                resourceStream = Application.GetResourceStream(new Uri("media/about.txt", UriKind.Relative));
+                if (resourceStream != null)
+                {
+                    using (Stream myFileStream = resourceStream.Stream)
+                    {
+                        if (myFileStream.CanRead)
+                        {
+                            StreamReader myStreamReader = new StreamReader(myFileStream);
+                            val = myStreamReader.ReadToEnd();
+                            myStreamReader.Close();
+                        }
+                        myFileStream.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                System.Diagnostics.Debug.WriteLine(ex.Message + "\n" + ex.StackTrace);
+#endif
+            }
+            txtAbout.Text = val;
         }
 
         private void listItemTapped(object sender, EventArgs e)

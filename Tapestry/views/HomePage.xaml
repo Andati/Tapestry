@@ -60,7 +60,7 @@
             
             <!-- item three -->
             <controls:PanoramaItem Header="about">
-                <Grid><TextBlock Name="txtAbout" Text="look in text file" FontSize="30" /></Grid>
+                <Grid><TextBlock Name="txtAbout" Text="look in text file" FontSize="30" TextWrapping="Wrap"/></Grid>
             </controls:PanoramaItem>
             
         </controls:Panorama>
