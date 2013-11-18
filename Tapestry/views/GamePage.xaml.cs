@@ -32,6 +32,9 @@ namespace Tapestry.views
         private bool isTimed;
         private DateTime startTime;
         private DispatcherTimer timer;
+        
+        //TODO Change game from timed to tap regions
+        //TODO Tapathon should have whole screen as tap region
 
         public GamePage()
         {
