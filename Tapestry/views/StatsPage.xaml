@@ -7,34 +7,49 @@
     xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:converters="clr-namespace:Coding4Fun.Toolkit.Controls.Converters;assembly=Coding4Fun.Toolkit.Controls"
     mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait"  Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
-
-    <!--LayoutRoot is the root grid where all page content is placed-->
+    <phone:PhoneApplicationPage.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="BoolToVisib"/>
+    </phone:PhoneApplicationPage.Resources>
+        <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <!--Pivot Control-->
-        <controls:Pivot Title="TAPESTRY : MY STATS">
+        <controls:Pivot Title="TAPESTRY : MY STATS" Name="pvtContainer" ItemsSource="{Binding}" DataContext="{Binding}">
+            <controls:Pivot.HeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Path=title}" />
+                </DataTemplate>
+            </controls:Pivot.HeaderTemplate>
+            <controls:Pivot.ItemTemplate>
+                <DataTemplate>
+                    <controls:PivotItem>
+                        <Grid>
+                            <TextBlock Visibility="{Binding Path=isEmpty, Converter={StaticResource BoolToVisib}}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="No top scores"  Foreground="{StaticResource PhoneAccentBrush}"/>
+                            <ListBox Name="lstStats"  ItemsSource="{Binding Path=scores}" DataContext="{Binding}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock FontSize="50" FontFamily="Lucida Sans Unicode" Text="{Binding Path=Score}" />
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+                    </controls:PivotItem>
+                </DataTemplate>
+            </controls:Pivot.ItemTemplate>
             <!--Pivot item one-->
-            <controls:PivotItem Header="5 seconds">
+            <!--<controls:PivotItem Header="5 seconds">
                 <Grid>
-
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-                                    Text="No top scores"
-                                    Name="noStats5"
-                                    Visibility="Visible"
-                                    Foreground="{StaticResource PhoneAccentBrush}"
-                             />
-                    
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="No top scores" Name="noStats5" Visibility="Visible" Foreground="{StaticResource PhoneAccentBrush}"/>
                     <ListBox Name="lst5sec" ItemsSource="{Binding}" DataContext="{Binding}">
                         <ListBox.ItemTemplate>
-                        <DataTemplate>                          
-                                    
+                            <DataTemplate>
                                 <TextBlock FontSize="50" FontFamily="Lucida Sans Unicode" Text="{Binding Path=Score}" />
-                                
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
@@ -141,12 +156,12 @@
                                     <TextBlock FontSize="50" FontFamily="Lucida Sans Unicode" Text="{Binding Path=Score}"/>
                                     <Border Width="50" />
                                     <TextBlock FontSize="50" FontFamily="Lucida Sans Unicode" Text="{Binding Path=Time}"/>
-                                </StackPanel> 
+                                </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </Grid>
-            </controls:PivotItem>
+            </controls:PivotItem>-->
         </controls:Pivot>
     </Grid>
 
@@ -161,5 +176,5 @@
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>-->
-    
+
 </phone:PhoneApplicationPage>
