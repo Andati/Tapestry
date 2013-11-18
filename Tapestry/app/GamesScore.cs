@@ -16,8 +16,6 @@ namespace Tapestry.app
     [Table]
     public class GamesScore
     {
-        public const string strConnectionString = @"isostore:/GamesScore.sdf";
-
         [Column(IsPrimaryKey = true, IsDbGenerated = true, CanBeNull = false, AutoSync = AutoSync.OnInsert)]
 
         public int GameScoreID { get; set; }

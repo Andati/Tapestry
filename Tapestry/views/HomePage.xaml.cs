@@ -11,17 +11,18 @@ namespace Tapestry.views
 {
     public partial class HomePage : PhoneApplicationPage
     {
-        private static Challenge[] challenges = { 
-                                                    new Challenge { time = 60 },new Challenge { time = 30 },
-                                                    new Challenge { time = 20 },new Challenge { time = 10 },
-                                                    new Challenge { time = 5 }, new Challenge { time = 0 }
-                                                };
+        private static Challenge[] challenges;
 
         public HomePage()
         {
             InitializeComponent();
+            int len = StringVals.TIME_CHALLENGES.Length;
+            challenges = new Challenge[len];
+            for (int i = 0; i < len; i++)
+            {
+                challenges[i] = new Challenge { time = StringVals.TIME_CHALLENGES[i] };
+            }
             lstCategory.DataContext = challenges;
-
             //TODO Execute in another thread
             loadAbout();
         }
@@ -32,7 +33,7 @@ namespace Tapestry.views
             string val = string.Empty;
             try
             {
-                resourceStream = Application.GetResourceStream(new Uri("media/about.txt", UriKind.Relative));
+                resourceStream = Application.GetResourceStream(new Uri(StringVals.ABOUT_TEXT, UriKind.Relative));
                 if (resourceStream != null)
                 {
                     using (Stream myFileStream = resourceStream.Stream)

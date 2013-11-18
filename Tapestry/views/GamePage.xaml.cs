@@ -86,7 +86,7 @@ namespace Tapestry.views
         {
             int time = (isTimed) ? getTimeout() : (int)(DateTime.Now - startTime).TotalSeconds;
 
-            using (GameScoreDataContext db = new GameScoreDataContext(GamesScore.strConnectionString))
+            using (GameScoreDataContext db = new GameScoreDataContext(StringVals.ISO_STORE_CONNECTION_STRING))
             {
                 GamesScore newScore = new GamesScore
                 {

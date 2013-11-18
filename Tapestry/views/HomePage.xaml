@@ -19,7 +19,7 @@
         <controls:Panorama Title="tapestry">
             <!--Panorama item one-->
             <controls:PanoramaItem Header="challenges">
-                <ListBox Name="lstCategory" ItemsSource="{Binding}" DataContext="{Binding}">
+                <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Name="lstCategory" ItemsSource="{Binding}" DataContext="{Binding}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Tap="listItemTapped"  Margin="30,5,0,0" Orientation="Horizontal">
@@ -35,7 +35,7 @@
             <!--Panorama item two-->
             <controls:PanoramaItem Header="stats">
                 <Grid>
-                    <ListBox>
+                    <ListBox  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                         <ListBoxItem Tap="ShowMyStatics" >
                             <StackPanel Margin="30,10,0,0" Orientation="Horizontal">
                                 <Image Source="/images/worldstats.png" />

@@ -64,7 +64,7 @@ namespace Tapestry
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
-            using (GameScoreDataContext db = new GameScoreDataContext( GamesScore.strConnectionString))
+            using (GameScoreDataContext db = new GameScoreDataContext( app.StringVals.ISO_STORE_CONNECTION_STRING))
             {
                 if (!db.DatabaseExists())
                 {

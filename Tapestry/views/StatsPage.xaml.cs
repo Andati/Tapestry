@@ -20,7 +20,7 @@ namespace Tapestry.views
         public StatsPage()
         {
             InitializeComponent();
-            db = new GameScoreDataContext(GamesScore.strConnectionString);
+            db = new GameScoreDataContext(StringVals.ISO_STORE_CONNECTION_STRING);
             List<GamesScore> seconds5 = new List<GamesScore>();
             List<GamesScore> seconds10 = new List<GamesScore>();
             List<GamesScore> seconds20 = new List<GamesScore>();
@@ -39,7 +39,8 @@ namespace Tapestry.views
             lst5sec.DataContext = seconds5;
 
             scores = from score in db.GameScores
-                     where (score.Time == 10 && score.isTimed) orderby score.Score descending
+                     where (score.Time == 10 && score.isTimed)
+                     orderby score.Score descending
                      select score;
             seconds10 = scores.Take(10).ToList();
             if (seconds10.Count != 0)
@@ -102,9 +103,6 @@ namespace Tapestry.views
                 noStattapathon.Visibility = System.Windows.Visibility.Collapsed;
             }
             lsttapathon.DataContext = tapathon;
-
         }
-
-
     }
 }
