@@ -28,6 +28,13 @@ namespace Tapestry.app
 
         [Column(CanBeNull = false)]
         public bool isTimed { get; set; }
+
+        /// <summary>
+        /// Save points as a csv file in isolatedstorage
+        /// CSV format : x, y, color, timestamp, shape, opacity
+        /// </summary>
+        [Column(CanBeNull = false)]
+        public string pointsFile { get; set; }
     }
 
     public class GameScoreDataContext : DataContext
