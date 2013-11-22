@@ -39,10 +39,11 @@ namespace Tapestry.app
         /// </summary>
         public void savePointsToFile(List<Tyap> tyaps)
         {
+            //TODO make this method async
             if (this.GameScoreID < 1) { throw new Exception("Invalid gamescoreid"); }
             using (IsolatedStorageFile iso = IsolatedStorageFile.GetUserStoreForApplication())
             {
-                string path = String.Format("{0}/{1}.json", StringVals.ISO_STORE_FOLDER_POINTS, GameScoreID);
+                string path = String.Format(StringVals.ISO_STORE_FILENAME_FORMAT, StringVals.ISO_STORE_FOLDER_POINTS, GameScoreID);
                 using (IsolatedStorageFileStream isfs = iso.OpenFile(path, System.IO.FileMode.CreateNew))
                 {
                     using (StreamWriter sw = new StreamWriter(isfs))
@@ -54,6 +55,28 @@ namespace Tapestry.app
                     isfs.Close();
                 }
             }
+        }
+        public List<Tyap> readPointsFromFile()
+        {
+            //TODO make this method async
+            List<Tyap> tyaps = null;
+            using (IsolatedStorageFile iso = IsolatedStorageFile.GetUserStoreForApplication())
+            {
+                string path = String.Format(StringVals.ISO_STORE_FILENAME_FORMAT, StringVals.ISO_STORE_FOLDER_POINTS, GameScoreID);
+                if (iso.FileExists(path))
+                {
+                    using (IsolatedStorageFileStream isfs = iso.OpenFile(path, FileMode.Open))
+                    {
+                        using (StreamReader sr = new StreamReader(isfs))
+                        {
+                            string text = sr.ReadToEnd();
+                            //TODO seriously dangerous, catch exceptions
+                            tyaps = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Tyap>>(text);
+                        }
+                    }
+                }
+            }
+            return tyaps;
         }
     }
 

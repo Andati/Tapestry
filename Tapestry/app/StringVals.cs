@@ -19,6 +19,7 @@ namespace Tapestry.app
         public static readonly string IMG_UNTIMED = "/images/untimed.png";
         public static readonly string ISO_STORE_CONNECTION_STRING = @"isostore:/GamesScore.sdf";
         public static readonly string ISO_STORE_FOLDER_POINTS = "points";
+        public static readonly string ISO_STORE_FILENAME_FORMAT = "{0}/{1}.json";
         public static readonly short[] TIME_CHALLENGES = { 60, 30, 20, 10,5, 0 };
         public static readonly string ABOUT_TEXT = "media/about.txt";
     }

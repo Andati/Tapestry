@@ -20,6 +20,7 @@ namespace Tapestry.views
     public partial class GamePage : PhoneApplicationPage
     {
         public static readonly string EXTRA_TIME = "time";
+        public static readonly string EXTRA_GAME = "game";
 
         private enum GAME_STATE
         {
@@ -166,8 +167,32 @@ namespace Tapestry.views
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            if (NavigationContext.QueryString.ContainsKey(EXTRA_GAME))
+            {
+                loadGame(int.Parse(NavigationContext.QueryString[EXTRA_GAME]));
+                return;
+            }
             int time = getTimeout();
             txtTimer.Text = (time > 1) ? time.ToString() : "tapathon";
+        }
+
+        private void loadGame(int gameID)
+        {
+            using (GameScoreDataContext db = new GameScoreDataContext(StringVals.ISO_STORE_CONNECTION_STRING))
+            {
+                var query = (from score in db.GameScores where (score.GameScoreID == gameID) select score);
+                if (query.Count() != 1) { return; } //game not found
+
+                GamesScore game = query.First();
+                List<Tyap> tyaps = game.readPointsFromFile();
+                txtCount.Text = game.Score.ToString(); txtTimer.Text = game.Time.ToString();
+                stckStart.Visibility = System.Windows.Visibility.Collapsed;
+                txtCount.Visibility = System.Windows.Visibility.Visible;
+                foreach (Tyap i in tyaps)
+                {
+                    addTapSpot(i);
+                }
+            }
         }
 
         protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)

@@ -31,7 +31,7 @@
                     <controls:PivotItem>
                         <Grid>
                             <TextBlock Visibility="{Binding Path=isEmpty, Converter={StaticResource BoolToVisib}}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="No top scores"  Foreground="{StaticResource PhoneAccentBrush}"/>
-                            <ListBox Name="lstStats"  ItemsSource="{Binding Path=scores}" DataContext="{Binding}">
+                            <ListBox Name="lstStats" Tap="statsTap" ItemsSource="{Binding Path=scores}" DataContext="{Binding}">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock FontSize="50" FontFamily="Lucida Sans Unicode" Text="{Binding Path=Score}" />

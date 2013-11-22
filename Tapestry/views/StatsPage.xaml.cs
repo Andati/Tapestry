@@ -123,5 +123,14 @@ namespace Tapestry.views
             //}
             //lsttapathon.DataContext = tapathon;
         }
+        public void statsTap(object sender, EventArgs args)
+        {
+            GamesScore game = (GamesScore)((ListBox)sender).SelectedItem;
+            if (game != null)
+            {
+                string path = "/views/GamePage.xaml?game=" + game.GameScoreID;
+                NavigationService.Navigate(new Uri(path, UriKind.RelativeOrAbsolute));
+            }
+        }
     }
 }
