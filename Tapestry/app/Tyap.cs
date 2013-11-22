@@ -13,13 +13,19 @@ namespace Tapestry.app
 {
     public class Tyap
     {
-        public long _timestamp;
-        public Color _color;
-        public Point _position;
+        private long _timestamp;
+        private Color _color;
+        private Point _position;
 
         public long timestamp { get { return _timestamp; } set { _timestamp = value; } }
         //TODO save as hex or bytes
         public Color color { get { return _color; } set { _color = value; } }
         public Point position { get { return _position; } set { _position = value; } }
+
+        public override string ToString()
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+
     }
 }

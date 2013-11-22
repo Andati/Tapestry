@@ -31,7 +31,7 @@ namespace Tapestry.views
         private bool isTimed;
         private DateTime startTime;
         private DispatcherTimer timer;
-
+        private List<Tyap> tyapList;
         //TODO Change game from timed to tap regions
         //TODO Tapathon should have whole screen as tap region
 
@@ -42,6 +42,7 @@ namespace Tapestry.views
             isTimed = true; //true by default unless it's a tapathon
             startTime = DateTime.Now;
             timer = null;
+            tyapList = new List<Tyap>(0);
         }
 
         private void startGame(int timeout)
@@ -94,7 +95,7 @@ namespace Tapestry.views
             txtTimer.Text = getTimeout().ToString();
             txtTimer.Visibility = System.Windows.Visibility.Collapsed;
             ((SolidColorBrush)txtTimer.Foreground).Color = Colors.Black;
-
+            tyapList.Clear();
             tapCanvas.Children.Clear();
             tapCanvas.Children.Add(rct);
         }
@@ -114,6 +115,7 @@ namespace Tapestry.views
 
                 db.GameScores.InsertOnSubmit(newScore);
                 db.SubmitChanges();
+                newScore.savePointsToFile(tyapList);
             }
             StackPanel sp = new StackPanel();
             sp.Children.Add(new Border { Height = 30 });
@@ -149,7 +151,8 @@ namespace Tapestry.views
             byte green = (byte)r.Next(0, 256);
             byte blue = (byte)r.Next(0, 256);
             Point p = e.GetPosition(tapCanvas);
-            addTapSpot(p, Color.FromArgb(alpha, red, green, blue));
+            Tyap tyap = new Tyap { position = p, timestamp = DateTime.Now.Ticks, color = Color.FromArgb(alpha, red, green, blue) };
+            addTapSpot(tyap);
             #endregion
         }
 
@@ -192,18 +195,23 @@ namespace Tapestry.views
                     X = e.StylusDevice.GetStylusPoints(tapCanvas).First().X,
                     Y = e.StylusDevice.GetStylusPoints(tapCanvas).First().Y
                 };
-                addTapSpot(p, Color.FromArgb(alpha, red, green, blue));
+                Tyap tyap = new Tyap { position = p, timestamp = DateTime.Now.Ticks, color = Color.FromArgb(alpha, red, green, blue) };
+                addTapSpot(tyap);
             }
 
         }
 
-        private void addTapSpot(Point p, Color c)
+        private void addTapSpot(Tyap tyap)
         {
-            Ellipse tap = new Ellipse { Width = 30, Height = 30, Fill = new SolidColorBrush(c) };
-            tap.SetValue(Canvas.LeftProperty, p.X - tap.Width / 2);
-            tap.SetValue(Canvas.TopProperty, p.Y - tap.Height / 2);
+            Ellipse tap = new Ellipse { Width = 30, Height = 30, Fill = new SolidColorBrush(tyap.color) };
+            tap.SetValue(Canvas.LeftProperty, tyap.position.X - tap.Width / 2);
+            tap.SetValue(Canvas.TopProperty, tyap.position.Y - tap.Height / 2);
             tap.IsHitTestVisible = false;
             tapCanvas.Children.Add(tap);
+            tyapList.Add(tyap);
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine(tyap);
+#endif
         }
 
         private void showPrompt()

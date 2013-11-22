@@ -10,6 +10,9 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Data.Linq.Mapping;
 using System.Data.Linq;
+using System.IO.IsolatedStorage;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Tapestry.app
 {
@@ -30,11 +33,28 @@ namespace Tapestry.app
         public bool isTimed { get; set; }
 
         /// <summary>
-        /// Save points as a csv file in isolatedstorage
+        /// Save points to file using gamescoreid as filename in isolatedstorage
         /// CSV format : x, y, color, timestamp, shape, opacity
+        /// Please use this method with a saved gamescore with a valid ID
         /// </summary>
-        [Column(CanBeNull = false)]
-        public string pointsFile { get; set; }
+        public void savePointsToFile(List<Tyap> tyaps)
+        {
+            if (this.GameScoreID < 1) { throw new Exception("Invalid gamescoreid"); }
+            using (IsolatedStorageFile iso = IsolatedStorageFile.GetUserStoreForApplication())
+            {
+                string path = String.Format("{0}/{1}.json", StringVals.ISO_STORE_FOLDER_POINTS, GameScoreID);
+                using (IsolatedStorageFileStream isfs = iso.OpenFile(path, System.IO.FileMode.CreateNew))
+                {
+                    using (StreamWriter sw = new StreamWriter(isfs))
+                    {
+                        sw.Write(Newtonsoft.Json.JsonConvert.SerializeObject(tyaps));
+                        sw.Flush();
+                        sw.Close();
+                    }
+                    isfs.Close();
+                }
+            }
+        }
     }
 
     public class GameScoreDataContext : DataContext

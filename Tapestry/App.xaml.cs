@@ -13,6 +13,7 @@ using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Tapestry.app;
+using System.IO.IsolatedStorage;
 
 namespace Tapestry
 {
@@ -70,6 +71,11 @@ namespace Tapestry
                 {
                     db.CreateDatabase();
                 }
+            }
+            using (IsolatedStorageFile f = IsolatedStorageFile.GetUserStoreForApplication()) { 
+                if (!f.DirectoryExists(StringVals.ISO_STORE_FOLDER_POINTS) ){
+                    f.CreateDirectory(StringVals.ISO_STORE_FOLDER_POINTS);
+                } 
             }
         }
 
